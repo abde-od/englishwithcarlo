@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Future Perfect! - Interactive Grammar Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'background': '#ffffff',
+                        'foreground': '#475569',
+                        'card': '#ecfccb',
+                        'primary': '#65a30d',
+                        'secondary': '#84cc16',
+                        'accent': '#84cc16',
+                        'muted': '#ecfccb',
+                        'border': '#d1d5db',
+                        'futureperf': '#65a30d',
+                        'futureperf-light': '#ecfccb',
+                        'futureperf-foreground': '#1f2937'
+                    },
+                    fontFamily: {
+                        'heading': ['Inter', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<style type="text/css">
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-x: hidden; }
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            color: white; min-height: 100vh;
+        }
+        .floating-elements { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .floating-shape { position: absolute; opacity: 0.3; animation: float 6s ease-in-out infinite; }
+        .floating-shape:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-shape:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .floating-shape:nth-child(3) { top: 60%; left: 5%; animation-delay: 2s; }
+        .floating-shape:nth-child(4) { bottom: 20%; right: 15%; animation-delay: 3s; }
+        .floating-shape:nth-child(5) { bottom: 10%; left: 20%; animation-delay: 4s; }
+
+        .nav {
+            position: fixed; top: 0; width: 100%; padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px) saturate(180%);
+            z-index: 1000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .nav::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+        .logo {
+            font-size: 28px; font-weight: bold; cursor: pointer; transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #ffd93d); background-size: 200% 200%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 3s ease-in-out infinite;
+        }
+        .logo:hover { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 20px rgba(255,107,107,0.6)); }
+
+        .nav-links { display: flex; list-style: none; gap: 0; align-items: center; }
+        .nav-links > li { position: relative; margin: 0 10px; }
+        .nav-links > li > a {
+            color: white; text-decoration: none; font-weight: bold; font-size: 18px; padding: 12px 20px; border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; gap: 8px; position: relative; overflow: hidden;
+        }
+        .nav-links > li > a::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s ease;
+        }
+        .nav-links > li > a:hover::before { left: 100%; }
+        .nav-links > li > a:hover {
+            transform: translateY(-3px) scale(1.05); background: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.4);
+        }
+
+        .nav-links li ul {
+            display: none; position: absolute; top: calc(100% + 15px); left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px) saturate(180%);
+            min-width: 200px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3);
+            padding: 15px 0; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); z-index: 1000;
+        }
+        .nav-links li ul::before {
+            content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid rgba(255,255,255,0.95);
+        }
+        .nav-links li:hover ul { display: block; opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .nav-links li ul li { display: block; padding: 0; margin: 0; position: relative; overflow: hidden; }
+        .nav-links li ul li a {
+            text-decoration: none; color: #333; display: block; padding: 12px 25px; font-size: 16px; font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1); border-radius: 15px; margin: 0 10px; position: relative; background: transparent; border: none; backdrop-filter: none;
+        }
+        .nav-links li ul li a::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4); transition: width 0.3s ease; border-radius: 15px; z-index: -1;
+        }
+        .nav-links li ul li a:hover::before { width: 100%; }
+        .nav-links li ul li a:hover { color: white; transform: translateX(10px) scale(1.02); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+
+        .dropdown-arrow { width: 16px; height: 16px; transition: transform 0.3s ease; opacity: 0.7; }
+        .nav-links li:hover .dropdown-arrow { transform: rotate(180deg); opacity: 1; }
+
+        .mobile-menu-toggle {
+            display: none; flex-direction: column; cursor: pointer; padding: 8px; border-radius: 8px;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease;
+        }
+        .mobile-menu-toggle:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .mobile-menu-toggle span { width: 25px; height: 3px; background: white; margin: 3px 0; border-radius: 2px; transition: all 0.3s ease; }
+        .mobile-menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .mobile-menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 100px 20px 20px; }
+        .header { text-align: center; margin-bottom: 40px; animation: bounceIn 1s ease; }
+        .header h1 { font-size: clamp(2.5rem, 6vw, 4rem); color: white; margin-bottom: 15px; font-weight: bold; text-shadow: 3px 3px 6px rgba(0,0,0,0.3); }
+        .header p { font-size: clamp(1.2rem, 3vw, 1.6rem); color: rgba(255,255,255,0.95); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+
+        .mode-toggle { display: flex; justify-content: center; margin-bottom: 40px; animation: slideInUp 1s ease 0.3s both; }
+        .mode-buttons { background: rgba(255,255,255,0.2); backdrop-filter: blur(15px); border-radius: 20px; padding: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.3); }
+        .mode-btn { padding: 15px 30px; border: none; background: transparent; color: white; border-radius: 15px; cursor: pointer; font-size: 18px; font-weight: bold; transition: all 0.3s; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .mode-btn.active { background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; transform: scale(1.05); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        .mode-btn:hover:not(.active) { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+        .learning-card {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(20px); border-radius: 25px; padding: 40px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2); margin-bottom: 30px; border: 2px solid rgba(255,255,255,0.3); animation: slideInUp 1s ease 0.6s both;
+        }
+        .card-title { font-size: 2rem; margin-bottom: 30px; color: rgba(255,255,255,0.95); text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+
+        .number-display {
+            font-size: 6rem; font-weight: bold; color: #4ecdc4; margin-bottom: 20px; transition: all 0.5s ease;
+            text-shadow: 0 0 30px rgba(78,205,196,0.6); animation: pulse 2s ease-in-out infinite;
+        }
+        .number-words { font-size: 2.5rem; color: #ff6b6b; font-weight: bold; text-transform: capitalize; text-shadow: 0 0 20px rgba(255,107,107,0.4); margin-bottom: 20px; }
+
+        .shape-display { display: flex; justify-content: center; align-items: center; margin: 30px 0; min-height: 200px; }
+        .shape { transition: all 0.5s ease; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); animation: rotate 4s linear infinite; }
+        .shape:hover { transform: scale(1.2); animation-play-state: paused; }
+        .shape-name { font-size: 2.5rem; color: #ff6b6b; font-weight: bold; text-transform: capitalize; text-shadow: 0 0 20px rgba(255,107,107,0.4); margin-top: 20px; }
+
+        .controls {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; animation: slideInUp 1s ease 0.9s both;
+        }
+        .control-btn {
+            padding: 18px 25px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
+            backdrop-filter: blur(15px); border: 2px solid rgba(255,255,255,0.3); color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .control-btn:hover:not(:disabled) { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .control-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-green { background: linear-gradient(45deg, #10b981, #34d399); }
+        .btn-orange { background: linear-gradient(45deg, #f97316, #fb923c); }
+        .btn-red { background: linear-gradient(45deg, #ef4444, #f87171); }
+        .btn-blue { background: linear-gradient(45deg, #2563eb, #60a5fa); }
+        .btn-purple { background: linear-gradient(45deg, #8b5cf6, #a78bfa); }
+
+        .quick-jump {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(20px); border-radius: 25px; padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); margin-bottom: 30px; border: 2px solid rgba(255,255,255,0.3); animation: slideInUp 1s ease 1.2s both;
+        }
+        .quick-jump h3 { text-align: center; margin-bottom: 25px; font-size: 1.8rem; color: rgba(255,255,255,0.95); text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .jump-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; }
+        .jump-btn {
+            padding: 15px; border: 2px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.2); backdrop-filter: blur(15px);
+            color: white; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; font-size: 16px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .jump-btn:hover { border-color: #4ecdc4; background: rgba(78,205,196,0.3); transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        .color-picker { display: flex; justify-content: center; gap: 20px; margin: 30px 0; flex-wrap: wrap; }
+        .color-option {
+            width: 70px; height: 70px; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; border: 4px solid rgba(255,255,255,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .color-option:hover { transform: scale(1.3) rotate(10deg); border-color: white; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+
+        .hidden { display: none; }
+
+        @keyframes gradientShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-30px) rotate(180deg); } }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes rotate { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+        @keyframes rainbow { 0% { filter: hue-rotate(0); } 100% { filter: hue-rotate(360deg); } }
+
+        /* Mobile fixes: disable “unwanted transitions/animations” and make sidebar full-height scrollable */
+       
+
+        /* Arabic submenu styles kept */
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { position: relative; display: inline-block; padding: 10px; }
+        li ul {
+            display: none; position: absolute; background-color:#f9f9f9; min-width: 100px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; cursor: pointer;
+        }
+        li:hover ul { display: block; }
+        li ul li { display: block; padding: 8px; }
+        li ul li a { text-decoration: none; color: black; display: block; }
+        li ul li a:hover { background-color: black; color: white; }
+        .dropdown-arrow { width: 1em; height: 1em; margin-left: 5px; }
+
+        /* Prevent background scroll when sidebar open */
+        body.no-scroll { overflow: hidden; position: fixed; width: 100%; }
+
+
+
+
+                /*in smart phone */
+
+        /* إخفاء القائمة في الشاشات الصغيرة */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+/* Enhanced Mobile Responsiveness for Navigation */
+@media (max-width: 768px) {
+  .nav {
+    padding: 10px 15px;
+  }
+
+  .nav-container {
+    position: relative; /* ✅ ضروري لحساب top من هنا */
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #fff;
+    position: absolute;
+    top: 60px; /* ✅ بدلًا من 60% */
+    right: 0;
+    border: 1px solid #ccc;
+    width: 80%;
+    max-height: 80vh;     /* ✅ لا يتجاوز الشاشة */
+    overflow-y: auto;     /* ✅ يمكن التمرير */
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 15px;        /* ✅ تصحيح خطأ px */
+  }
+
+  .nav-links.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle span {
+    height: 3px;
+    width: 25px;
+    background-color: #333;
+    margin: 4px 0;
+  }
+}
+
+</style>
+<body class="bg-gradient-to-br from-futureperf-light to-white text-foreground font-body">
+
+<nav class="nav">
+        <div class="nav-container">
+            <div class="logo" onclick="scrollToTop()">🌟 English with Abde </div>
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
+            <ul class="nav-links" id="navLinks">
+                <li>
+                    <a href="#numbers">🔢 Courses
+                        <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <ul>
+                        <li><a href="index.html" onclick="setMode('numbers')">🏠 Home</a></li>
+                        <li class="mode-btn" id="shapesBtn" onclick="setMode('shapes')"><a href="index.html">📚  Numbers &🧪 Shapes</a></li>
+                        <li><a href="color.html">✏️ Colors</a></li>
+                        <li><a href="animals.html">🐈 Animals </a></li>
+                        <li><a href="jobs.html">👨‍🔧 jobs </a></li>
+                        <li><a href="seasons.html">🍂 seasons </a></li>
+                        <li><a href="clothes.html">👗 Clothes </a></li>
+                        <li><a href="vegetables.html">🍆 vegetables </a></li>
+                        <li><a href="fruits.html">🍎 fruits </a></li>
+                        <li><a href="countries.html">🌍 countries </a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#shapes">🔺 Grammar
+                        <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <ul>
+                        <li><a href="presentsimple.html">present simple</a></li>
+                        <li><a href="present_continues.html"> present Continuous</a></li>
+                        <li><a href="present_perfect.html">present perfect</a></li>
+                        <li><a href="pastsimple.html">past simple</a></li>
+                        <li><a href="past_continue.html">past Continuous</a></li>
+                        <li><a href="past_perfect.html">past perfect</a></li>
+                        <li><a href="futuresimple.html">future simple</a></li>
+                        <li><a href="future_continue.html">future Continuous</a></li>
+                        <li><a href="future_perfect.html">future perfect</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#themes">Conversation
+                        <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <ul>
+                        <li><a href="school.html">In school</a></li>
+                        <li><a href="restaurant.html">In restaurant</a></li>
+                        <li><a href="airport.html">In airport</a></li>
+                        <li><a href="hotel.html">In hotel</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+
+        <script type="text/javascript">
+          
+          function toggleMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    navLinks.classList.toggle('active');
+    toggle.classList.toggle('active');
+    document.body.classList.toggle('no-scroll', navLinks.classList.contains('active'));
+}
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        </script>
+    </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Header Section -->
+    <header class="bg-futureperf-light py-12 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-5xl font-heading font-bold text-futureperf mb-4">Learn Future Perfect! 🎯</h1>
+            <p class="text-xl text-foreground max-w-2xl mx-auto">
+                Master the future perfect tense and learn to talk about actions that will be completed by a future time!
+            </p>
+        </div>
+    </header>
+
+    <!-- Grammar Rules Section -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-heading font-bold text-futureperf text-center mb-6">
+                    How to Use Future Perfect ⏭️
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="p-6 bg-futureperf-light rounded-xl">
+                        <h3 class="font-bold text-futureperf mb-3">✅ Positive Form</h3>
+                        <div class="space-y-2 text-sm">
+                            <div><strong>will have + past participle</strong></div>
+                            <div class="text-blue-600">I <strong>will have finished</strong> by 5 PM.</div>
+                            <div class="text-blue-600">She <strong>will have left</strong> by then.</div>
+                            <div class="text-blue-600">They <strong>will have arrived</strong> by tomorrow.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 bg-futureperf-light rounded-xl">
+                        <h3 class="font-bold text-futureperf mb-3">❌ Negative Form</h3>
+                        <div class="space-y-2 text-sm">
+                            <div><strong>will not have + past participle</strong></div>
+                            <div class="text-blue-600">I <strong>won't have finished</strong> by 5 PM.</div>
+                            <div class="text-blue-600">She <strong>won't have left</strong> yet.</div>
+                            <div class="text-blue-600">They <strong>won't have arrived</strong>.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 bg-futureperf-light rounded-xl">
+                        <h3 class="font-bold text-futureperf mb-3">❓ Question Form</h3>
+                        <div class="space-y-2 text-sm">
+                            <div><strong>Will + subject + have + past participle?</strong></div>
+                            <div class="text-blue-600"><strong>Will</strong> you have finished by 5 PM?</div>
+                            <div class="text-blue-600"><strong>Will</strong> she have left by then?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 bg-futureperf-light rounded-xl">
+                        <h3 class="font-bold text-futureperf mb-3">🎯 When to Use</h3>
+                        <div class="space-y-1 text-sm">
+                            <div>• Action completed by future time</div>
+                            <div>• Future deadlines and goals</div>
+                            <div>• Duration up to future point</div>
+                            <div>• Future achievements</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercise 1: Time Deadline Challenge -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-heading font-bold text-futureperf text-center mb-6">
+                    Exercise 1: Deadline Challenge ���
+                </h2>
+                
+                <div class="text-center mb-8">
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <div class="flex items-center space-x-2 bg-futureperf-light px-4 py-2 rounded-full">
+                            <span class="text-futureperf">⏰</span>
+                            <span class="font-semibold">Progress: <span id="deadline-current">1</span>/<span id="deadline-total">8</span></span>
+                        </div>
+                    </div>
+                    
+                    <div id="deadline-container" class="mb-6">
+                        <div class="text-lg font-semibold text-gray-800 mb-6">
+                            Complete the sentence using future perfect:
+                        </div>
+                        
+                        <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <div class="text-sm text-gray-600 mb-2">Situation:</div>
+                                    <div class="font-medium text-gray-800" id="deadline-situation">Loading...</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-600 mb-2">Deadline:</div>
+                                    <div class="font-bold text-futureperf text-lg" id="deadline-time">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="text-lg mb-4" id="deadline-sentence">
+                                Loading sentence...
+                            </div>
+                            <select
+                                id="deadline-select"
+                                class="px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:border-futureperf focus:outline-none"
+                            >
+                                <option value="">Choose...</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        
+                        <div id="deadline-feedback" class="mt-4 p-3 rounded-lg font-semibold hidden"></div>
+                        
+                        <div class="flex gap-3 justify-center mt-6">
+                            <button
+                                id="check-deadline"
+                                class="bg-futureperf text-futureperf-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                            >
+                                Check Answer ✓
+                            </button>
+                            
+                            <button
+                                id="next-deadline"
+                                class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity hidden"
+                            >
+                                Next Challenge ➡️
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercise 2: Life Goals Planner -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-heading font-bold text-futureperf text-center mb-6">
+                    Exercise 2: Life Goals Planner 🎯
+                </h2>
+                
+                <div class="text-center mb-8">
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <div class="flex items-center space-x-2 bg-futureperf-light px-4 py-2 rounded-full">
+                            <span class="text-futureperf">🎯</span>
+                            <span class="font-semibold">Goals Set: <span id="goals-completed">0</span>/<span id="goals-total">6</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-futureperf-light p-6 rounded-xl mb-6">
+                        <h3 class="font-bold text-futureperf mb-3">🎯 Plan Your Future Achievements</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Complete these future goals using the future perfect tense. 
+                            Think about what you will have accomplished by different times in your life!
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-6" id="goals-container">
+                        <!-- Goals will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="flex gap-3 justify-center mt-8">
+                        <button
+                            id="check-goals"
+                            class="bg-futureperf text-futureperf-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                        >
+                            Check Goals ✓
+                        </button>
+                        
+                        <button
+                            id="reset-goals"
+                            class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                        >
+                            Reset Goals 🔄
+                        </button>
+                    </div>
+                    
+                    <div id="goals-feedback" class="mt-6 p-4 rounded-lg hidden">
+                        <div class="font-bold text-futureperf mb-2">Your Future Plan:</div>
+                        <div id="complete-goals" class="text-gray-700 space-y-2 text-left"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercise 3: By When? Matching -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-heading font-bold text-futureperf text-center mb-6">
+                    Exercise 3: "By When?" Matching Game 🔗
+                </h2>
+                
+                <div class="text-center mb-8">
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <div class="flex items-center space-x-2 bg-futureperf-light px-4 py-2 rounded-full">
+                            <span class="text-futureperf">🔗</span>
+                            <span class="font-semibold">Matched: <span id="matching-score">0</span>/<span id="matching-total">6</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-lg font-semibold text-gray-800 mb-6">
+                        Drag time expressions to complete the future perfect sentences!
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Time expressions -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-bold text-futureperf">Time Expressions</h3>
+                            <div class="space-y-3" id="time-expressions">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Sentences with drop zones -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-bold text-futureperf">Sentences</h3>
+                            <div class="space-y-3" id="sentence-zones">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 justify-center mt-8">
+                        <button
+                            id="check-matching"
+                            class="bg-futureperf text-futureperf-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                        >
+                            Check Matches ✓
+                        </button>
+                        
+                        <button
+                            id="reset-matching"
+                            class="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                        >
+                            Reset 🔄
+                        </button>
+                    </div>
+                    
+                    <div id="matching-feedback" class="mt-6 p-4 rounded-lg hidden"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercise 4: Future vs Future Perfect Quiz -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-heading font-bold text-futureperf text-center mb-6">
+                    Exercise 4: Future Simple vs Future Perfect Quiz 🤔
+                </h2>
+                
+                <div class="text-center mb-8">
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <div class="flex items-center space-x-2 bg-futureperf-light px-4 py-2 rounded-full">
+                            <span class="text-futureperf">🤔</span>
+                            <span class="font-semibold">Score: <span id="quiz-score">0</span>/<span id="quiz-total">0</span></span>
+                        </div>
+                    </div>
+                    
+                    <div id="quiz-container" class="mb-6">
+                        <div class="text-xl font-semibold text-gray-800 mb-4" id="quiz-question">
+                            Choose the correct form:
+                        </div>
+                        
+                        <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                            <div class="text-lg font-medium" id="quiz-context">Loading context...</div>
+                            <div class="text-lg mt-2" id="quiz-sentence">Loading sentence...</div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-6" id="quiz-options">
+                            <!-- Options will be generated by JavaScript -->
+                        </div>
+                        
+                        <div id="quiz-feedback" class="mt-4 p-3 rounded-lg font-semibold hidden"></div>
+                        
+                        <button
+                            id="quiz-next"
+                            class="mt-4 bg-futureperf text-futureperf-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                        >
+                            Next Question ➡️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grammar Tips -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <h2 class="text-2xl font-heading font-bold text-futureperf mb-6">
+                    Grammar Tips! 💡
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-gradient-to-br from-futureperf-light to-white rounded-xl">
+                        <div class="text-4xl mb-3">⏰</div>
+                        <h3 class="font-bold text-gray-800 mb-2">Completed by Future Time</h3>
+                        <p class="text-gray-600">
+                            Future perfect shows actions that will be finished before a specific future time.
+                        </p>
+                    </div>
+                    
+                    <div class="p-6 bg-gradient-to-br from-futureperf-light to-white rounded-xl">
+                        <div class="text-4xl mb-3">📅</div>
+                        <h3 class="font-bold text-gray-800 mb-2">With "By" and Time</h3>
+                        <p class="text-gray-600">
+                            Often used with "by": "by tomorrow", "by 5 PM", "by next year".
+                        </p>
+                    </div>
+                    
+                    <div class="p-6 bg-gradient-to-br from-futureperf-light to-white rounded-xl">
+                        <div class="text-4xl mb-3">🎯</div>
+                        <h3 class="font-bold text-gray-800 mb-2">Goals and Deadlines</h3>
+                        <p class="text-gray-600">
+                            Perfect for talking about future achievements and completion deadlines.
+                        </p>
+                    </div>
+                    
+                    <div class="p-6 bg-gradient-to-br from-futureperf-light to-white rounded-xl">
+                        <div class="text-4xl mb-3">📏</div>
+                        <h3 class="font-bold text-gray-800 mb-2">Duration Until Future</h3>
+                        <p class="text-gray-600">
+                            Shows how long something will have been happening: "will have worked for 10 years".
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-futureperf-light py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p class="text-futureperf font-semibold">Keep practicing and master Future Perfect! 🎯✨</p>
+        </div>
+    </footer>
+
+    <script>
+        // Exercise 1: Deadline Challenge Data
+        const deadlineData = [
+            {
+                situation: "Sarah starts a 3-hour project at 2 PM",
+                deadline: "by 5 PM",
+                sentence: "By 5 PM, Sarah _____ her project.",
+                options: ["will finish", "will have finished", "will be finishing", "finishes"],
+                correct: "will have finished",
+                explanation: "Use future perfect for actions completed by a specific future time."
+            },
+            {
+                situation: "The movie starts at 8 PM and runs for 2 hours",
+                deadline: "by 10 PM",
+                sentence: "By 10 PM, the movie _____.",
+                options: ["will end", "will have ended", "will be ending", "ends"],
+                correct: "will have ended",
+                explanation: "The movie will be completed by 10 PM."
+            },
+            {
+                situation: "John's flight departs at 9 AM",
+                deadline: "by 9 AM",
+                sentence: "By 9 AM, John _____ at the airport.",
+                options: ["will arrive", "will have arrived", "will be arriving", "arrives"],
+                correct: "will have arrived",
+                explanation: "He must complete his arrival before the flight time."
+            },
+            {
+                situation: "The test starts at 2 PM",
+                deadline: "by 2 PM",
+                sentence: "By 2 PM, all students _____ the classroom.",
+                options: ["will enter", "will have entered", "will be entering", "enter"],
+                correct: "will have entered",
+                explanation: "Students must be in the classroom before the test starts."
+            },
+            {
+                situation: "The store closes at 6 PM",
+                deadline: "by 6 PM",
+                sentence: "By 6 PM, we _____ our shopping.",
+                options: ["will complete", "will have completed", "will be completing", "complete"],
+                correct: "will have completed",
+                explanation: "Shopping must be finished before the store closes."
+            },
+            {
+                situation: "The deadline for homework is Friday",
+                deadline: "by Friday",
+                sentence: "By Friday, I _____ all my assignments.",
+                options: ["will submit", "will have submitted", "will be submitting", "submit"],
+                correct: "will have submitted",
+                explanation: "All assignments must be turned in before the deadline."
+            },
+            {
+                situation: "The party starts at 7 PM",
+                deadline: "by 7 PM",
+                sentence: "By 7 PM, Maria _____ ready for the party.",
+                options: ["will get", "will have gotten", "will be getting", "gets"],
+                correct: "will have gotten",
+                explanation: "She must be ready before the party begins."
+            },
+            {
+                situation: "The train leaves at 11 AM",
+                deadline: "by 11 AM",
+                sentence: "By 11 AM, we _____ our tickets.",
+                options: ["will buy", "will have bought", "will be buying", "buy"],
+                correct: "will have bought",
+                explanation: "Tickets must be purchased before the train departs."
+            }
+        ];
+
+        // Exercise 2: Life Goals Data
+        const goalsData = [
+            {
+                timeframe: "By age 25",
+                goal: "I _____ _____ _____ (graduate) from university.",
+                answer: "will have graduated",
+                verb: "graduate"
+            },
+            {
+                timeframe: "By next year",
+                goal: "I _____ _____ _____ (learn) to speak Spanish fluently.",
+                answer: "will have learned",
+                verb: "learn"
+            },
+            {
+                timeframe: "By age 30",
+                goal: "I _____ _____ _____ (save) enough money to buy a house.",
+                answer: "will have saved",
+                verb: "save"
+            },
+            {
+                timeframe: "By the end of this year",
+                goal: "I _____ _____ _____ (read) 20 books.",
+                answer: "will have read",
+                verb: "read"
+            },
+            {
+                timeframe: "By age 40",
+                goal: "I _____ _____ _____ (visit) 10 different countries.",
+                answer: "will have visited",
+                verb: "visit"
+            },
+            {
+                timeframe: "By retirement",
+                goal: "I _____ _____ _____ (work) for 40 years.",
+                answer: "will have worked",
+                verb: "work"
+            }
+        ];
+
+        // Exercise 3: Matching Data
+        const matchingData = [
+            {
+                expression: "by tomorrow",
+                sentence: "She will have finished the report _____.",
+                correct: "by tomorrow"
+            },
+            {
+                expression: "by 6 PM",
+                sentence: "We will have arrived home _____.",
+                correct: "by 6 PM"
+            },
+            {
+                expression: "by next month",
+                sentence: "They will have moved to their new house _____.",
+                correct: "by next month"
+            },
+            {
+                expression: "by the time you call",
+                sentence: "I will have left the office _____.",
+                correct: "by the time you call"
+            },
+            {
+                expression: "by Christmas",
+                sentence: "We will have decorated the entire house _____.",
+                correct: "by Christmas"
+            },
+            {
+                expression: "by midnight",
+                sentence: "The party will have ended _____.",
+                correct: "by midnight"
+            }
+        ];
+
+        // Exercise 4: Quiz Data
+        const quizData = [
+            {
+                context: "Talking about a deadline:",
+                sentence: "I _____ my homework by 9 PM tonight.",
+                options: ["will finish", "will have finished"],
+                correct: 1,
+                explanation: "Use future perfect for completion by a specific time."
+            },
+            {
+                context: "Making a simple future plan:",
+                sentence: "Tomorrow I _____ to the store.",
+                options: ["will go", "will have gone"],
+                correct: 0,
+                explanation: "Use future simple for basic future actions."
+            },
+            {
+                context: "Talking about duration until a future point:",
+                sentence: "By 2025, we _____ here for 10 years.",
+                options: ["will live", "will have lived"],
+                correct: 1,
+                explanation: "Use future perfect for duration up to a future time."
+            },
+            {
+                context: "Making a prediction:",
+                sentence: "It _____ tomorrow.",
+                options: ["will rain", "will have rained"],
+                correct: 0,
+                explanation: "Use future simple for basic predictions."
+            },
+            {
+                context: "Talking about completion before another future action:",
+                sentence: "She _____ dinner before the guests arrive.",
+                options: ["will cook", "will have cooked"],
+                correct: 1,
+                explanation: "Use future perfect for completion before another future event."
+            }
+        ];
+
+        // Exercise 1: Deadline Challenge Logic
+        let deadlineIndex = 0;
+
+        function loadDeadlineChallenge() {
+            if (deadlineIndex >= deadlineData.length) {
+                deadlineIndex = 0;
+            }
+            
+            const challenge = deadlineData[deadlineIndex];
+            document.getElementById('deadline-situation').textContent = challenge.situation;
+            document.getElementById('deadline-time').textContent = challenge.deadline;
+            document.getElementById('deadline-sentence').textContent = challenge.sentence;
+            
+            const select = document.getElementById('deadline-select');
+            select.innerHTML = '<option value="">Choose...</option>';
+            
+            challenge.options.forEach(option => {
+                const optionEl = document.createElement('option');
+                optionEl.value = option;
+                optionEl.textContent = option;
+                select.appendChild(optionEl);
+            });
+            
+            document.getElementById('deadline-feedback').classList.add('hidden');
+            document.getElementById('next-deadline').classList.add('hidden');
+            document.getElementById('deadline-current').textContent = deadlineIndex + 1;
+        }
+
+        function checkDeadlineAnswer() {
+            const userAnswer = document.getElementById('deadline-select').value;
+            const correctAnswer = deadlineData[deadlineIndex].correct;
+            const feedbackEl = document.getElementById('deadline-feedback');
+            
+            if (userAnswer === correctAnswer) {
+                feedbackEl.textContent = `🎉 Correct! ${deadlineData[deadlineIndex].explanation}`;
+                feedbackEl.className = 'mt-4 p-3 rounded-lg font-semibold bg-green-100 text-green-800';
+                document.getElementById('next-deadline').classList.remove('hidden');
+            } else if (userAnswer === '') {
+                feedbackEl.textContent = 'Please select an answer first!';
+                feedbackEl.className = 'mt-4 p-3 rounded-lg font-semibold bg-yellow-100 text-yellow-800';
+            } else {
+                feedbackEl.textContent = `❌ Wrong. Correct answer: "${correctAnswer}". ${deadlineData[deadlineIndex].explanation}`;
+                feedbackEl.className = 'mt-4 p-3 rounded-lg font-semibold bg-red-100 text-red-800';
+            }
+            
+            feedbackEl.classList.remove('hidden');
+        }
+
+        function nextDeadlineChallenge() {
+            deadlineIndex++;
+            loadDeadlineChallenge();
+        }
+
+        // Exercise 2: Life Goals Logic
+        function setupGoalsExercise() {
+            const container = document.getElementById('goals-container');
+            container.innerHTML = '';
+            
+            goalsData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-gray-100 p-4 rounded-lg text-left';
+                
+                const goalText = item.goal.replace(/_____ _____ _____/, '');
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'goals-input mx-2 px-3 py-2 border-2 border-gray-300 rounded w-48 text-center';
+                input.placeholder = `will have ${item.verb}`;
+                input.dataset.answer = item.answer;
+                
+                div.innerHTML = `
+                    <div class="font-semibold text-futureperf mb-2">${item.timeframe}</div>
+                    <div class="text-lg">${goalText}</div>
+                `;
+                
+                const textParts = item.goal.split('_____ _____ _____');
+                const textNode = document.createElement('div');
+                textNode.className = 'text-lg';
+                textNode.innerHTML = textParts[0];
+                textNode.appendChild(input);
+                textNode.innerHTML += textParts[1] || '';
+                
+                div.appendChild(textNode);
+                container.appendChild(div);
+            });
+        }
+
+        function checkGoalsAnswers() {
+            const inputs = document.querySelectorAll('.goals-input');
+            let correct = 0;
+            let goalsList = [];
+            
+            inputs.forEach((input, index) => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.dataset.answer.toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.remove('border-red-500');
+                    input.classList.add('border-green-500', 'bg-green-50');
+                    correct++;
+                } else {
+                    input.classList.remove('border-green-500');
+                    input.classList.add('border-red-500', 'bg-red-50');
+                }
+                
+                const completedGoal = goalsData[index].goal.replace(/_____ _____ _____/, input.dataset.answer);
+                goalsList.push(`${goalsData[index].timeframe}: ${completedGoal}`);
+            });
+            
+            document.getElementById('goals-completed').textContent = correct;
+            
+            if (correct > 0) {
+                document.getElementById('goals-feedback').classList.remove('hidden');
+                const goalsDisplay = document.getElementById('complete-goals');
+                goalsDisplay.innerHTML = goalsList.map(goal => `<div>${goal}</div>`).join('');
+                document.getElementById('goals-feedback').className = 'mt-6 p-4 rounded-lg bg-blue-100 text-blue-800';
+            }
+        }
+
+        function resetGoalsExercise() {
+            const inputs = document.querySelectorAll('.goals-input');
+            inputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('border-red-500', 'border-green-500', 'bg-red-50', 'bg-green-50');
+            });
+            document.getElementById('goals-completed').textContent = '0';
+            document.getElementById('goals-feedback').classList.add('hidden');
+        }
+
+        // Exercise 3: Matching Logic
+        function setupMatchingExercise() {
+            const expressionsContainer = document.getElementById('time-expressions');
+            const sentencesContainer = document.getElementById('sentence-zones');
+            
+            expressionsContainer.innerHTML = '';
+            sentencesContainer.innerHTML = '';
+            
+            // Create draggable time expressions
+            matchingData.forEach((item, index) => {
+                const expr = document.createElement('div');
+                expr.className = 'bg-futureperf-light p-3 rounded-lg cursor-move border-2 border-futureperf text-center font-semibold';
+                expr.textContent = item.expression;
+                expr.draggable = true;
+                expr.dataset.expression = item.expression;
+                
+                expr.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.expression);
+                });
+                
+                expressionsContainer.appendChild(expr);
+            });
+            
+            // Create drop zones
+            matchingData.forEach((item, index) => {
+                const zone = document.createElement('div');
+                zone.className = 'bg-gray-100 p-4 rounded-lg border-2 border-dashed border-gray-300';
+                zone.innerHTML = `
+                    <div class="font-medium mb-2">${item.sentence}</div>
+                    <div class="drop-zone p-2 bg-white rounded border-2 border-dashed border-gray-400 min-h-8 flex items-center justify-center text-gray-500" data-correct="${item.correct}">
+                        Drop here
+                    </div>
+                `;
+                
+                const dropZone = zone.querySelector('.drop-zone');
+                
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-futureperf', 'bg-futureperf-light');
+                });
+                
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.classList.remove('border-futureperf', 'bg-futureperf-light');
+                });
+                
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const droppedText = e.dataTransfer.getData('text/plain');
+                    dropZone.textContent = droppedText;
+                    dropZone.classList.remove('border-futureperf', 'bg-futureperf-light');
+                    dropZone.classList.add('border-gray-400', 'bg-white');
+                });
+                
+                sentencesContainer.appendChild(zone);
+            });
+        }
+
+        function checkMatchingAnswers() {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let correct = 0;
+            
+            dropZones.forEach((zone, index) => {
+                const userAnswer = zone.textContent.trim();
+                const correctAnswer = zone.dataset.correct;
+                
+                if (userAnswer === correctAnswer) {
+                    zone.classList.remove('border-red-500', 'bg-red-50');
+                    zone.classList.add('border-green-500', 'bg-green-50');
+                    correct++;
+                } else if (userAnswer !== 'Drop here') {
+                    zone.classList.remove('border-green-500', 'bg-green-50');
+                    zone.classList.add('border-red-500', 'bg-red-50');
+                }
+            });
+            
+            document.getElementById('matching-score').textContent = correct;
+            
+            const feedbackEl = document.getElementById('matching-feedback');
+            if (correct === matchingData.length) {
+                feedbackEl.textContent = '🎉 Perfect! All time expressions are correctly matched!';
+                feedbackEl.className = 'mt-6 p-4 rounded-lg bg-green-100 text-green-800 font-semibold';
+            } else {
+                feedbackEl.textContent = `Good try! You got ${correct} out of ${matchingData.length} correct.`;
+                feedbackEl.className = 'mt-6 p-4 rounded-lg bg-yellow-100 text-yellow-800 font-semibold';
+            }
+            feedbackEl.classList.remove('hidden');
+        }
+
+        function resetMatchingExercise() {
+            setupMatchingExercise();
+            document.getElementById('matching-score').textContent = '0';
+            document.getElementById('matching-feedback').classList.add('hidden');
+        }
+
+        // Exercise 4: Quiz Logic
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizTotal = 0;
+
+        function loadQuizQuestion() {
+            if (quizIndex >= quizData.length) {
+                quizIndex = 0;
+            }
+            
+            const question = quizData[quizIndex];
+            document.getElementById('quiz-context').textContent = question.context;
+            document.getElementById('quiz-sentence').textContent = question.sentence;
+            
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'bg-white border-2 border-gray-300 p-4 rounded-lg hover:border-futureperf hover:bg-futureperf-light transition-colors text-left';
+                button.textContent = option;
+                button.addEventListener('click', () => checkQuizAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('quiz-feedback').classList.add('hidden');
+        }
+
+        function checkQuizAnswer(selectedIndex) {
+            const question = quizData[quizIndex];
+            quizTotal++;
+            document.getElementById('quiz-total').textContent = quizTotal;
+            
+            const feedbackEl = document.getElementById('quiz-feedback');
+            const isCorrect = selectedIndex === question.correct;
+            
+            if (isCorrect) {
+                quizScore++;
+                document.getElementById('quiz-score').textContent = quizScore;
+                feedbackEl.textContent = `🎉 Correct! ${question.explanation}`;
+                feedbackEl.className = 'mt-4 p-3 rounded-lg font-semibold bg-green-100 text-green-800';
+            } else {
+                feedbackEl.textContent = `❌ Wrong. Correct answer: "${question.options[question.correct]}". ${question.explanation}`;
+                feedbackEl.className = 'mt-4 p-3 rounded-lg font-semibold bg-red-100 text-red-800';
+            }
+            
+            feedbackEl.classList.remove('hidden');
+            
+            const buttons = document.querySelectorAll('#quiz-options button');
+            buttons.forEach(button => {
+                button.disabled = true;
+                button.classList.add('opacity-50');
+            });
+        }
+
+        function nextQuizQuestion() {
+            quizIndex++;
+            loadQuizQuestion();
+        }
+
+        // Event Listeners
+        document.getElementById('check-deadline').addEventListener('click', checkDeadlineAnswer);
+        document.getElementById('next-deadline').addEventListener('click', nextDeadlineChallenge);
+        document.getElementById('check-goals').addEventListener('click', checkGoalsAnswers);
+        document.getElementById('reset-goals').addEventListener('click', resetGoalsExercise);
+        document.getElementById('check-matching').addEventListener('click', checkMatchingAnswers);
+        document.getElementById('reset-matching').addEventListener('click', resetMatchingExercise);
+        document.getElementById('quiz-next').addEventListener('click', nextQuizQuestion);
+
+        // Initialize all exercises
+        loadDeadlineChallenge();
+        setupGoalsExercise();
+        setupMatchingExercise();
+        loadQuizQuestion();
+    </script>
+</body>
+</html>

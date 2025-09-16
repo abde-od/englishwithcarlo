@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn About Time & Seasons! - Interactive Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'background': '#ffffff',
+                        'foreground': '#374151',
+                        'card': '#f0f9ff',
+                        'primary': '#0369a1',
+                        'secondary': '#0ea5e9',
+                        'accent': '#38bdf8',
+                        'muted': '#f0f9ff',
+                        'border': '#d1d5db',
+                        'spring': '#10b981',
+                        'summer': '#f59e0b',
+                        'autumn': '#ea580c',
+                        'winter': '#3b82f6'
+                    },
+                    fontFamily: {
+                        'heading': ['Playfair Display', 'serif'],
+                        'body': ['Source Sans Pro', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+
+
+<style type="text/css">
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow-x: hidden; }
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            color: white; min-height: 100vh;
+        }
+        .floating-elements { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .floating-shape { position: absolute; opacity: 0.3; animation: float 6s ease-in-out infinite; }
+        .floating-shape:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-shape:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .floating-shape:nth-child(3) { top: 60%; left: 5%; animation-delay: 2s; }
+        .floating-shape:nth-child(4) { bottom: 20%; right: 15%; animation-delay: 3s; }
+        .floating-shape:nth-child(5) { bottom: 10%; left: 20%; animation-delay: 4s; }
+
+        .nav {
+            position: fixed; top: 0; width: 100%; padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px) saturate(180%);
+            z-index: 1000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .nav::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+        .logo {
+            font-size: 28px; font-weight: bold; cursor: pointer; transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #ffd93d); background-size: 200% 200%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 3s ease-in-out infinite;
+        }
+        .logo:hover { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 20px rgba(255,107,107,0.6)); }
+
+        .nav-links { display: flex; list-style: none; gap: 0; align-items: center; }
+        .nav-links > li { position: relative; margin: 0 10px; }
+        .nav-links > li > a {
+            color: white; text-decoration: none; font-weight: bold; font-size: 18px; padding: 12px 20px; border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; gap: 8px; position: relative; overflow: hidden;
+        }
+        .nav-links > li > a::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s ease;
+        }
+        .nav-links > li > a:hover::before { left: 100%; }
+        .nav-links > li > a:hover {
+            transform: translateY(-3px) scale(1.05); background: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.4);
+        }
+
+        .nav-links li ul {
+            display: none; position: absolute; top: calc(100% + 15px); left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px) saturate(180%);
+            min-width: 200px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.3);
+            padding: 15px 0; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); z-index: 1000;
+        }
+        .nav-links li ul::before {
+            content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid rgba(255,255,255,0.95);
+        }
+        .nav-links li:hover ul { display: block; opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .nav-links li ul li { display: block; padding: 0; margin: 0; position: relative; overflow: hidden; }
+        .nav-links li ul li a {
+            text-decoration: none; color: #333; display: block; padding: 12px 25px; font-size: 16px; font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1); border-radius: 15px; margin: 0 10px; position: relative; background: transparent; border: none; backdrop-filter: none;
+        }
+        .nav-links li ul li a::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4); transition: width 0.3s ease; border-radius: 15px; z-index: -1;
+        }
+        .nav-links li ul li a:hover::before { width: 100%; }
+        .nav-links li ul li a:hover { color: white; transform: translateX(10px) scale(1.02); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+
+        .dropdown-arrow { width: 16px; height: 16px; transition: transform 0.3s ease; opacity: 0.7; }
+        .nav-links li:hover .dropdown-arrow { transform: rotate(180deg); opacity: 1; }
+
+        .mobile-menu-toggle {
+            display: none; flex-direction: column; cursor: pointer; padding: 8px; border-radius: 8px;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s ease;
+        }
+        .mobile-menu-toggle:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .mobile-menu-toggle span { width: 25px; height: 3px; background: white; margin: 3px 0; border-radius: 2px; transition: all 0.3s ease; }
+        .mobile-menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .mobile-menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 100px 20px 20px; }
+        .header { text-align: center; margin-bottom: 40px; animation: bounceIn 1s ease; }
+        .header h1 { font-size: clamp(2.5rem, 6vw, 4rem); color: white; margin-bottom: 15px; font-weight: bold; text-shadow: 3px 3px 6px rgba(0,0,0,0.3); }
+        .header p { font-size: clamp(1.2rem, 3vw, 1.6rem); color: rgba(255,255,255,0.95); text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+
+        .mode-toggle { display: flex; justify-content: center; margin-bottom: 40px; animation: slideInUp 1s ease 0.3s both; }
+        .mode-buttons { background: rgba(255,255,255,0.2); backdrop-filter: blur(15px); border-radius: 20px; padding: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.3); }
+        .mode-btn { padding: 15px 30px; border: none; background: transparent; color: white; border-radius: 15px; cursor: pointer; font-size: 18px; font-weight: bold; transition: all 0.3s; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .mode-btn.active { background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; transform: scale(1.05); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        .mode-btn:hover:not(.active) { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+        .learning-card {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(20px); border-radius: 25px; padding: 40px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2); margin-bottom: 30px; border: 2px solid rgba(255,255,255,0.3); animation: slideInUp 1s ease 0.6s both;
+        }
+        .card-title { font-size: 2rem; margin-bottom: 30px; color: rgba(255,255,255,0.95); text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+
+        .number-display {
+            font-size: 6rem; font-weight: bold; color: #4ecdc4; margin-bottom: 20px; transition: all 0.5s ease;
+            text-shadow: 0 0 30px rgba(78,205,196,0.6); animation: pulse 2s ease-in-out infinite;
+        }
+        .number-words { font-size: 2.5rem; color: #ff6b6b; font-weight: bold; text-transform: capitalize; text-shadow: 0 0 20px rgba(255,107,107,0.4); margin-bottom: 20px; }
+
+        .shape-display { display: flex; justify-content: center; align-items: center; margin: 30px 0; min-height: 200px; }
+        .shape { transition: all 0.5s ease; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); animation: rotate 4s linear infinite; }
+        .shape:hover { transform: scale(1.2); animation-play-state: paused; }
+        .shape-name { font-size: 2.5rem; color: #ff6b6b; font-weight: bold; text-transform: capitalize; text-shadow: 0 0 20px rgba(255,107,107,0.4); margin-top: 20px; }
+
+        .controls {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; animation: slideInUp 1s ease 0.9s both;
+        }
+        .control-btn {
+            padding: 18px 25px; border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
+            backdrop-filter: blur(15px); border: 2px solid rgba(255,255,255,0.3); color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .control-btn:hover:not(:disabled) { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .control-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-green { background: linear-gradient(45deg, #10b981, #34d399); }
+        .btn-orange { background: linear-gradient(45deg, #f97316, #fb923c); }
+        .btn-red { background: linear-gradient(45deg, #ef4444, #f87171); }
+        .btn-blue { background: linear-gradient(45deg, #2563eb, #60a5fa); }
+        .btn-purple { background: linear-gradient(45deg, #8b5cf6, #a78bfa); }
+
+        .quick-jump {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(20px); border-radius: 25px; padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); margin-bottom: 30px; border: 2px solid rgba(255,255,255,0.3); animation: slideInUp 1s ease 1.2s both;
+        }
+        .quick-jump h3 { text-align: center; margin-bottom: 25px; font-size: 1.8rem; color: rgba(255,255,255,0.95); text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .jump-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; }
+        .jump-btn {
+            padding: 15px; border: 2px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.2); backdrop-filter: blur(15px);
+            color: white; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; font-size: 16px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .jump-btn:hover { border-color: #4ecdc4; background: rgba(78,205,196,0.3); transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        .color-picker { display: flex; justify-content: center; gap: 20px; margin: 30px 0; flex-wrap: wrap; }
+        .color-option {
+            width: 70px; height: 70px; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; border: 4px solid rgba(255,255,255,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .color-option:hover { transform: scale(1.3) rotate(10deg); border-color: white; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+
+        .hidden { display: none; }
+
+        @keyframes gradientShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-30px) rotate(180deg); } }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes rotate { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+        @keyframes rainbow { 0% { filter: hue-rotate(0); } 100% { filter: hue-rotate(360deg); } }
+
+        /* Mobile fixes: disable “unwanted transitions/animations” and make sidebar full-height scrollable */
+     
+
+        /* Arabic submenu styles kept */
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { position: relative; display: inline-block; padding: 10px; }
+        li ul {
+            display: none; position: absolute; background-color:#f9f9f9; min-width: 100px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; cursor: pointer;
+        }
+        li:hover ul { display: block; }
+        li ul li { display: block; padding: 8px; }
+        li ul li a { text-decoration: none; color: black; display: block; }
+        li ul li a:hover { background-color: black; color: white; }
+        .dropdown-arrow { width: 1em; height: 1em; margin-left: 5px; }
+
+        /* Prevent background scroll when sidebar open */
+        body.no-scroll { overflow: hidden; position: fixed; width: 100%; }
+
+
+
+
+                /*in smart phone */
+
+        /* إخفاء القائمة في الشاشات الصغيرة */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    padding: 10px 15px;
+  }
+
+  .nav-container {
+    position: relative; /* ✅ ضروري لحساب top من هنا */
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #fff;
+    position: absolute;
+    top: 60px; /* ✅ بدلًا من 60% */
+    right: 0;
+    border: 1px solid #ccc;
+    width: 80%;
+    max-height: 80vh;     /* ✅ لا يتجاوز الشاشة */
+    overflow-y: auto;     /* ✅ يمكن التمرير */
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 15px;        /* ✅ تصحيح خطأ px */
+  }
+
+  .nav-links.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle span {
+    height: 3px;
+    width: 25px;
+    background-color: #333;
+    margin: 4px 0;
+  }
+}
+</style>
+<body class="bg-background text-foreground font-body">
+
+
+
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="logo" onclick="scrollToTop()">🌟 English with Abde </div>
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
+            <ul class="nav-links" id="navLinks">
+                <li>
+                    <a href="#numbers">🔢 Courses
+                        <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <ul>
+                        <li><a href="index.html" onclick="setMode('numbers')">🏠 Home</a></li>
+                        <li class="mode-btn" id="shapesBtn" onclick="setMode('shapes')"><a href="index.html">📚  Numbers &🧪 Shapes</a></li>
+                        <li><a href="color.html">✏️ Colors</a></li>
+                        <li><a href="animals.html">🐈 Animals </a></li>
+                        <li><a href="jobs.html">👨‍🔧 jobs </a></li>
+                        <li><a href="seasons.html">🍂 seasons </a></li>
+                        <li><a href="clothes.html">👗 Clothes </a></li>
+                        <li><a href="vegetables.html">🍆 vegetables </a></li>
+                        <li><a href="fruits.html">🍎 fruits </a></li>
+                        <li><a href="countries.html">🌍 countries </a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#shapes">🔺 Grammar
+                        <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <ul>
+                        <li><a href="presentsimple.html">present simple</a></li>
+                        <li><a href="present_continues.html"> present Continuous</a></li>
+                        <li><a href="present_perfect.html">present perfect</a></li>
+                        <li><a href="pastsimple.html">past simple</a></li>
+                        <li><a href="past_continue.html">past Continuous</a></li>
+                        <li><a href="past_perfect.html">past perfect</a></li>
+                        <li><a href="futuresimple.html">future simple</a></li>
+                        <li><a href="future_continue.html">future Continuous</a></li>
+                        <li><a href="future_perfect.html">future perfect</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#themes">Conversation
+                        <svg class="dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <ul>
+                        <li><a href="school.html">In school</a></li>
+                        <li><a href="restaurant.html">In restaurant</a></li>
+                        <li><a href="airport.html">In airport</a></li>
+                        <li><a href="hotel.html">In hotel</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <script type="text/javascript">
+          
+          function toggleMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    navLinks.classList.toggle('active');
+    toggle.classList.toggle('active');
+    document.body.classList.toggle('no-scroll', navLinks.classList.contains('active'));
+}
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        </script>
+    </nav>
+    <!-- Header Section -->
+    <header class="bg-card py-12 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-5xl font-heading font-bold text-primary mb-4">Learn About Time & Seasons! 🌅</h1>
+            <p class="text-xl text-foreground max-w-2xl mx-auto">Discover the magic of days, months, seasons, and time through interactive examples and fun activities that teach you about our calendar and nature's cycles.</p>
+        </div>
+    </header>
+
+    <!-- Time & Seasons Gallery Section -->
+    <section class="py-16 bg-background">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">Time & Seasons Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6" id="timeGrid">
+                <!-- Time items will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Quiz Section -->
+    <section class="py-16 bg-card">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">Time & Seasons Quiz</h2>
+            <div class="bg-background rounded-lg p-8 shadow-lg">
+                <div id="quizContainer">
+                    <div class="text-center mb-8">
+                        <div id="quizTime" class="text-8xl mb-6 mx-auto w-32 h-32 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-cyan-50 shadow-lg"></div>
+                        <h3 class="text-2xl font-heading mb-6">What time period is this?</h3>
+                        <div class="grid grid-cols-2 gap-4" id="quizOptions">
+                            <!-- Quiz options will be generated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p id="quizFeedback" class="text-lg font-semibold mb-4"></p>
+                        <button id="nextQuestion" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors" onclick="nextQuizQuestion()">Next Question</button>
+                    </div>
+                </div>
+                <div class="text-center mt-6">
+                    <p class="text-lg">Score: <span id="score" class="font-bold text-primary">0</span> / <span id="totalQuestions" class="font-bold">0</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practice Section -->
+    <section class="py-16 bg-background">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">Practice Writing</h2>
+            <div class="bg-card rounded-lg p-8 shadow-lg">
+                <div class="text-center mb-8">
+                    <div id="practiceTime" class="text-8xl mb-6 mx-auto w-40 h-40 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-50 to-cyan-50 shadow-lg"></div>
+                    <h3 class="text-2xl font-heading mb-6">Type the name of this time period:</h3>
+                    <input type="text" id="timeInput" class="w-full max-w-md mx-auto px-4 py-3 border-2 border-border rounded-lg text-center text-xl font-semibold focus:border-primary focus:outline-none" placeholder="Enter time period...">
+                    <button onclick="checkAnswer()" class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors mt-4 block mx-auto">Check Answer</button>
+                    <p id="practiceResult" class="text-lg font-semibold mt-4"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Time Facts Section -->
+    <section class="py-16 bg-card">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">Amazing Time Facts! ⏰</h2>
+            <div id="factContainer" class="bg-background rounded-lg p-8 shadow-lg text-center">
+                <div id="factTime" class="text-6xl mb-4"></div>
+                <h3 id="factTitle" class="text-2xl font-heading font-bold mb-4 text-primary"></h3>
+                <p id="factText" class="text-lg text-foreground mb-6"></p>
+                <button onclick="showRandomFact()" class="bg-secondary text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors">Show Another Fact</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Season Challenge -->
+    <section class="py-16 bg-background">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">Season Challenge! 🌳</h2>
+            <div class="bg-card rounded-lg p-8 shadow-lg">
+                <div class="text-center mb-8">
+                    <div id="seasonChallenge" class="text-6xl mb-4"></div>
+                    <h3 class="text-2xl font-heading mb-6">Which season comes after <span id="currentSeason" class="text-primary font-bold"></span>?</h3>
+                    <div class="grid grid-cols-2 gap-4" id="seasonOptions">
+                        <!-- Season options will be generated by JavaScript -->
+                    </div>
+                    <p id="seasonResult" class="text-lg font-semibold mt-4"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Builder -->
+    <section class="py-16 bg-card">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">Calendar Builder! 📅</h2>
+            <div class="bg-background rounded-lg p-8 shadow-lg">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-heading mb-6">Put the days of the week in order!</h3>
+                    <div id="scrambledDays" class="flex flex-wrap gap-2 justify-center mb-6">
+                        <!-- Scrambled days will be generated by JavaScript -->
+                    </div>
+                    <div id="dayDropZone" class="min-h-20 border-2 border-dashed border-primary rounded-lg p-4 mb-6">
+                        <p class="text-gray-500">Drag days here in the correct order</p>
+                    </div>
+                    <button onclick="checkDaysOrder()" class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors">Check Order</button>
+                    <p id="daysResult" class="text-lg font-semibold mt-4"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- My Favorite Season -->
+    <section class="py-16 bg-background">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-heading font-bold text-center mb-12 text-primary">My Favorite Season! 🌻</h2>
+            <div class="bg-card rounded-lg p-8 shadow-lg">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-heading mb-6">Tell us about your favorite season and why you love it!</h3>
+                    <select id="favoriteSeason" class="w-full max-w-md mx-auto px-4 py-3 border-2 border-border rounded-lg text-lg focus:border-primary focus:outline-none mb-4">
+                        <option value="">Choose your favorite season...</option>
+                        <option value="Spring">🌸 Spring</option>
+                        <option value="Summer">☀️ Summer</option>
+                        <option value="Autumn">🍂 Autumn</option>
+                        <option value="Winter">❄️ Winter</option>
+                    </select>
+                    <textarea id="seasonMemory" class="w-full max-w-2xl mx-auto px-4 py-3 border-2 border-border rounded-lg text-lg focus:border-primary focus:outline-none" rows="4" placeholder="I love this season because... My favorite activity is... I remember when..."></textarea>
+                    <button onclick="saveSeasonMemory()" class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors mt-4 block mx-auto">Save My Memory</button>
+                    <p id="memoryResult" class="text-lg font-semibold mt-4"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-card py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p class="text-foreground">Time moves forward and seasons change - enjoy every moment! 🌟</p>
+        </div>
+    </footer>
+
+    <script>
+        // Time and seasons data with emojis, names, and details
+        const timeAndSeasons = [
+            // Days of the week
+            { 
+                name: 'Monday', 
+                emoji: '📅', 
+                type: 'Day', 
+                category: 'weekday',
+                order: 1,
+                fact: 'Monday is the first day of the work week in most countries! It\'s named after the Moon.',
+                activities: ['starting school', 'beginning new projects']
+            },
+            { 
+                name: 'Tuesday', 
+                emoji: '📆', 
+                type: 'Day', 
+                category: 'weekday',
+                order: 2,
+                fact: 'Tuesday is named after Mars, the Roman god of war! In many cultures, it\'s considered a lucky day.',
+                activities: ['attending classes', 'working on assignments']
+            },
+            { 
+                name: 'Wednesday', 
+                emoji: '🗓️', 
+                type: 'Day', 
+                category: 'weekday',
+                order: 3,
+                fact: 'Wednesday is the middle of the week! It\'s sometimes called "Hump Day" because you\'re over the week\'s hump.',
+                activities: ['midweek activities', 'catching up on work']
+            },
+            { 
+                name: 'Thursday', 
+                emoji: '📋', 
+                type: 'Day', 
+                category: 'weekday',
+                order: 4,
+                fact: 'Thursday is named after Thor, the Norse god of thunder! It\'s almost the weekend!',
+                activities: ['preparing for weekend', 'finishing week\'s work']
+            },
+            { 
+                name: 'Friday', 
+                emoji: '🎉', 
+                type: 'Day', 
+                category: 'weekday',
+                order: 5,
+                fact: 'Friday is the last work day of the week! It\'s named after Freya, the Norse goddess of love.',
+                activities: ['celebrating end of week', 'making weekend plans']
+            },
+            { 
+                name: 'Saturday', 
+                emoji: '🏖️', 
+                type: 'Day', 
+                category: 'weekend',
+                order: 6,
+                fact: 'Saturday is the weekend! It\'s named after Saturn, the Roman god of agriculture.',
+                activities: ['relaxing', 'family time', 'fun activities']
+            },
+            { 
+                name: 'Sunday', 
+                emoji: '🌅', 
+                type: 'Day', 
+                category: 'weekend',
+                order: 7,
+                fact: 'Sunday is named after the Sun! It\'s a day of rest in many cultures around the world.',
+                activities: ['resting', 'preparing for new week', 'spending time with family']
+            },
+            
+            // Seasons
+            { 
+                name: 'Spring', 
+                emoji: '🌸', 
+                type: 'Season', 
+                category: 'season',
+                order: 1,
+                fact: 'Spring is when flowers bloom and the weather gets warmer! Animals have babies and trees grow new leaves.',
+                activities: ['planting gardens', 'watching baby animals', 'enjoying warmer weather'],
+                months: ['March', 'April', 'May']
+            },
+            { 
+                name: 'Summer', 
+                emoji: '☀️', 
+                type: 'Season', 
+                category: 'season',
+                order: 2,
+                fact: 'Summer is the warmest season! It\'s perfect for swimming, camping, and playing outside all day.',
+                activities: ['swimming', 'camping', 'beach trips', 'longer days'],
+                months: ['June', 'July', 'August']
+            },
+            { 
+                name: 'Autumn', 
+                emoji: '🍂', 
+                type: 'Season', 
+                category: 'season',
+                order: 3,
+                fact: 'Autumn is when leaves change beautiful colors and fall! It\'s harvest time for many fruits and vegetables.',
+                activities: ['collecting leaves', 'apple picking', 'watching leaves change colors'],
+                months: ['September', 'October', 'November']
+            },
+            { 
+                name: 'Winter', 
+                emoji: '❄️', 
+                type: 'Season', 
+                category: 'season',
+                order: 4,
+                fact: 'Winter is the coldest season! In some places it snows, and many animals hibernate until spring.',
+                activities: ['building snowmen', 'sledding', 'staying warm inside'],
+                months: ['December', 'January', 'February']
+            },
+
+            // Months (selection)
+            { 
+                name: 'January', 
+                emoji: '🎊', 
+                type: 'Month', 
+                category: 'month',
+                order: 1,
+                fact: 'January is the first month of the year! It\'s named after Janus, the Roman god with two faces.',
+                activities: ['New Year celebrations', 'making resolutions']
+            },
+            { 
+                name: 'April', 
+                emoji: '🌦️', 
+                type: 'Month', 
+                category: 'month',
+                order: 4,
+                fact: 'April is known for spring rain showers that help flowers grow! "April showers bring May flowers."',
+                activities: ['watching spring flowers bloom', 'enjoying rain']
+            },
+            { 
+                name: 'July', 
+                emoji: '🎆', 
+                type: 'Month', 
+                category: 'month',
+                order: 7,
+                fact: 'July is the warmest month in many places! It\'s named after Julius Caesar.',
+                activities: ['summer vacation', 'outdoor activities', 'fireworks']
+            },
+            { 
+                name: 'October', 
+                emoji: '🎃', 
+                type: 'Month', 
+                category: 'month',
+                order: 10,
+                fact: 'October is famous for Halloween and beautiful autumn leaves! The name means "eighth month" in Latin.',
+                activities: ['Halloween', 'fall decorations', 'leaf collecting']
+            },
+            { 
+                name: 'December', 
+                emoji: '🎄', 
+                type: 'Month', 
+                category: 'month',
+                order: 12,
+                fact: 'December is the last month of the year! It\'s filled with winter holidays and celebrations.',
+                activities: ['winter holidays', 'year-end celebrations', 'family gatherings']
+            },
+
+            // Time concepts
+            { 
+                name: 'Morning', 
+                emoji: '🌅', 
+                type: 'Time of Day', 
+                category: 'time',
+                fact: 'Morning is when the sun rises! It\'s a fresh start to a new day full of possibilities.',
+                activities: ['eating breakfast', 'starting school', 'morning exercises']
+            },
+            { 
+                name: 'Afternoon', 
+                emoji: '🌞', 
+                type: 'Time of Day', 
+                category: 'time',
+                fact: 'Afternoon is when the sun is highest in the sky! It\'s usually the warmest part of the day.',
+                activities: ['lunch time', 'outdoor play', 'afternoon classes']
+            },
+            { 
+                name: 'Evening', 
+                emoji: '🌆', 
+                type: 'Time of Day', 
+                category: 'time',
+                fact: 'Evening is when the sun starts to set! Families often gather together for dinner.',
+                activities: ['dinner time', 'family activities', 'homework']
+            },
+            { 
+                name: 'Night', 
+                emoji: '🌙', 
+                type: 'Time of Day', 
+                category: 'time',
+                fact: 'Night is when the moon and stars come out! It\'s time to rest and sleep for the next day.',
+                activities: ['bedtime stories', 'sleeping', 'looking at stars']
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let totalQuestions = 0;
+        let currentPracticeTime = null;
+        let currentSeasonChallenge = null;
+        let draggedItem = null;
+
+        // Generate time grid
+        function generateTimeGrid() {
+            const grid = document.getElementById('timeGrid');
+            timeAndSeasons.forEach(timeItem => {
+                const timeCard = document.createElement('div');
+                timeCard.className = 'text-center cursor-pointer transform hover:scale-105 transition-transform';
+                
+                let bgColor = 'from-blue-50 to-cyan-50';
+                if (timeItem.category === 'season') {
+                    switch(timeItem.name) {
+                        case 'Spring': bgColor = 'from-green-50 to-emerald-50'; break;
+                        case 'Summer': bgColor = 'from-yellow-50 to-orange-50'; break;
+                        case 'Autumn': bgColor = 'from-orange-50 to-red-50'; break;
+                        case 'Winter': bgColor = 'from-blue-50 to-indigo-50'; break;
+                    }
+                }
+                
+                timeCard.innerHTML = `
+                    <div class="w-24 h-24 rounded-full mx-auto mb-3 shadow-lg border-4 border-white hover:border-primary transition-colors bg-gradient-to-br ${bgColor} flex items-center justify-center text-4xl">${timeItem.emoji}</div>
+                    <h3 class="font-semibold text-lg text-foreground">${timeItem.name}</h3>
+                    <p class="text-sm text-muted-foreground font-medium text-primary">${timeItem.type}</p>
+                `;
+                timeCard.addEventListener('click', () => showTimeDetails(timeItem));
+                grid.appendChild(timeCard);
+            });
+        }
+
+        // Show time details
+        function showTimeDetails(timeItem) {
+            let details = `${timeItem.emoji} ${timeItem.name}\n\n🏷️ Type: ${timeItem.type}`;
+            if (timeItem.months) {
+                details += `\n📅 Months: ${timeItem.months.join(', ')}`;
+            }
+            if (timeItem.activities) {
+                details += `\n🎯 Activities: ${timeItem.activities.join(', ')}`;
+            }
+            details += `\n\n💡 Fun Fact: ${timeItem.fact}`;
+            alert(details);
+        }
+
+        // Quiz functionality
+        function startQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            totalQuestions = 0;
+            nextQuizQuestion();
+        }
+
+        function nextQuizQuestion() {
+            totalQuestions++;
+            const randomTime = timeAndSeasons[Math.floor(Math.random() * timeAndSeasons.length)];
+            const quizTime = document.getElementById('quizTime');
+            const quizOptions = document.getElementById('quizOptions');
+            const feedback = document.getElementById('quizFeedback');
+            
+            quizTime.textContent = randomTime.emoji;
+            feedback.textContent = '';
+            
+            // Generate options (correct answer + 3 random wrong answers)
+            const options = [randomTime];
+            while (options.length < 4) {
+                const randomOption = timeAndSeasons[Math.floor(Math.random() * timeAndSeasons.length)];
+                if (!options.includes(randomOption)) {
+                    options.push(randomOption);
+                }
+            }
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+            
+            quizOptions.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'bg-white border-2 border-border hover:border-primary px-4 py-3 rounded-lg font-semibold transition-colors';
+                button.textContent = option.name;
+                button.onclick = () => checkQuizAnswer(option.name === randomTime.name, randomTime.name);
+                quizOptions.appendChild(button);
+            });
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+        }
+
+        function checkQuizAnswer(isCorrect, correctAnswer) {
+            const feedback = document.getElementById('quizFeedback');
+            if (isCorrect) {
+                score++;
+                feedback.textContent = 'Correct! Well done! 🎉';
+                feedback.className = 'text-lg font-semibold mb-4 text-green-600';
+            } else {
+                feedback.textContent = `Incorrect. The correct answer is ${correctAnswer}.`;
+                feedback.className = 'text-lg font-semibold mb-4 text-red-600';
+            }
+            document.getElementById('score').textContent = score;
+        }
+
+        // Practice functionality
+        function startPractice() {
+            const randomTime = timeAndSeasons[Math.floor(Math.random() * timeAndSeasons.length)];
+            currentPracticeTime = randomTime;
+            document.getElementById('practiceTime').textContent = randomTime.emoji;
+            document.getElementById('timeInput').value = '';
+            document.getElementById('practiceResult').textContent = '';
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('timeInput').value.trim().toLowerCase();
+            const correctAnswer = currentPracticeTime.name.toLowerCase();
+            const result = document.getElementById('practiceResult');
+            
+            if (userAnswer === correctAnswer) {
+                result.textContent = 'Excellent! That\'s correct! 🌟';
+                result.className = 'text-lg font-semibold mt-4 text-green-600';
+                setTimeout(startPractice, 2000);
+            } else {
+                result.textContent = `Try again! The correct answer is "${currentPracticeTime.name}".`;
+                result.className = 'text-lg font-semibold mt-4 text-red-600';
+            }
+        }
+
+        // Time facts functionality
+        function showRandomFact() {
+            const randomTime = timeAndSeasons[Math.floor(Math.random() * timeAndSeasons.length)];
+            document.getElementById('factTime').textContent = randomTime.emoji;
+            document.getElementById('factTitle').textContent = `Amazing ${randomTime.name} Fact!`;
+            document.getElementById('factText').textContent = randomTime.fact;
+        }
+
+        // Season challenge functionality
+        function startSeasonChallenge() {
+            const seasons = timeAndSeasons.filter(item => item.category === 'season');
+            const currentSeason = seasons[Math.floor(Math.random() * seasons.length)];
+            const nextSeasonIndex = (currentSeason.order % 4);
+            const correctNext = seasons.find(s => s.order === (nextSeasonIndex === 0 ? 1 : nextSeasonIndex + 1));
+            
+            currentSeasonChallenge = { current: currentSeason, correct: correctNext };
+            
+            document.getElementById('seasonChallenge').textContent = '🔄';
+            document.getElementById('currentSeason').textContent = currentSeason.name;
+            
+            // Generate 4 season options
+            const options = [...seasons];
+            options.sort(() => Math.random() - 0.5);
+            
+            const seasonOptions = document.getElementById('seasonOptions');
+            seasonOptions.innerHTML = '';
+            
+            options.forEach(season => {
+                const button = document.createElement('button');
+                button.className = 'bg-white border-2 border-border hover:border-primary px-4 py-3 rounded-lg font-semibold transition-colors';
+                button.textContent = `${season.emoji} ${season.name}`;
+                button.onclick = () => checkSeasonAnswer(season.name === correctNext.name, correctNext.name);
+                seasonOptions.appendChild(button);
+            });
+            
+            document.getElementById('seasonResult').textContent = '';
+        }
+
+        function checkSeasonAnswer(isCorrect, correctAnswer) {
+            const result = document.getElementById('seasonResult');
+            if (isCorrect) {
+                result.textContent = `Correct! ${correctAnswer} comes next! 🎯`;
+                result.className = 'text-lg font-semibold mt-4 text-green-600';
+            } else {
+                result.textContent = `Not quite! ${correctAnswer} comes after ${currentSeasonChallenge.current.name}.`;
+                result.className = 'text-lg font-semibold mt-4 text-red-600';
+            }
+            setTimeout(startSeasonChallenge, 3000);
+        }
+
+        // Calendar builder functionality
+        function initializeCalendarBuilder() {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const scrambledDays = [...days].sort(() => Math.random() - 0.5);
+            
+            const container = document.getElementById('scrambledDays');
+            container.innerHTML = '';
+            
+            scrambledDays.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'bg-primary text-white px-4 py-2 rounded-lg cursor-move font-semibold';
+                dayElement.textContent = day;
+                dayElement.draggable = true;
+                dayElement.ondragstart = (e) => {
+                    draggedItem = day;
+                    e.dataTransfer.setData('text/plain', day);
+                };
+                container.appendChild(dayElement);
+            });
+            
+            const dropZone = document.getElementById('dayDropZone');
+            dropZone.ondragover = (e) => e.preventDefault();
+            dropZone.ondrop = (e) => {
+                e.preventDefault();
+                const day = e.dataTransfer.getData('text/plain');
+                const dayElement = document.createElement('span');
+                dayElement.className = 'bg-green-100 text-green-800 px-3 py-1 rounded-lg font-semibold mr-2 mb-2 inline-block';
+                dayElement.textContent = day;
+                dropZone.appendChild(dayElement);
+                
+                // Remove from scrambled area
+                const scrambledElements = document.querySelectorAll('#scrambledDays div');
+                scrambledElements.forEach(el => {
+                    if (el.textContent === day) {
+                        el.remove();
+                    }
+                });
+            };
+        }
+
+        function checkDaysOrder() {
+            const dropZone = document.getElementById('dayDropZone');
+            const droppedDays = Array.from(dropZone.querySelectorAll('span')).map(span => span.textContent);
+            const correctOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            const result = document.getElementById('daysResult');
+            if (JSON.stringify(droppedDays) === JSON.stringify(correctOrder)) {
+                result.textContent = 'Perfect! You got the days in the right order! 🗓️';
+                result.className = 'text-lg font-semibold mt-4 text-green-600';
+            } else {
+                result.textContent = 'Try again! Remember: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.';
+                result.className = 'text-lg font-semibold mt-4 text-orange-600';
+            }
+        }
+
+        // Season memory functionality
+        function saveSeasonMemory() {
+            const selectedSeason = document.getElementById('favoriteSeason').value;
+            const memoryText = document.getElementById('seasonMemory').value.trim();
+            const result = document.getElementById('memoryResult');
+            
+            if (selectedSeason && memoryText.length > 10) {
+                result.textContent = `Your ${selectedSeason} memory has been saved! What a wonderful season to love! 🌟`;
+                result.className = 'text-lg font-semibold mt-4 text-green-600';
+                
+                // Store in localStorage
+                localStorage.setItem('favoriteSeasonMemory', JSON.stringify({
+                    season: selectedSeason,
+                    memory: memoryText
+                }));
+            } else {
+                result.textContent = 'Please choose a season and tell us more about why you love it!';
+                result.className = 'text-lg font-semibold mt-4 text-orange-600';
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateTimeGrid();
+            startQuiz();
+            startPractice();
+            showRandomFact();
+            startSeasonChallenge();
+            initializeCalendarBuilder();
+            
+            // Load saved season memory if exists
+            const savedMemory = localStorage.getItem('favoriteSeasonMemory');
+            if (savedMemory) {
+                const memoryData = JSON.parse(savedMemory);
+                document.getElementById('favoriteSeason').value = memoryData.season;
+                document.getElementById('seasonMemory').value = memoryData.memory;
+            }
+        });
+
+        // Allow Enter key to submit practice answer
+        document.getElementById('timeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Add some time and nature quotes
+        const timeQuotes = [
+            "Every season has its beauty - enjoy each moment!",
+            "Time flies when you're having fun - make memories!",
+            "The best time is always right now - be present!",
+            "Nature's calendar teaches us patience and wonder.",
+            "Each day is a gift - that's why it's called the present!"
+        ];
+
+        // Show random time inspiration
+        function showTimeInspiration() {
+            const quote = timeQuotes[Math.floor(Math.random() * timeQuotes.length)];
+            alert(`⏰ Time Wisdom: ${quote}`);
+        }
+
+        // Add inspiration function to global scope
+        window.showTimeInspiration = showTimeInspiration;
+    </script>
+
+    <style>
+        /* Additional custom styles */
+        .time-card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Add some time-themed animations */
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .rotate-on-hover:hover {
+            animation: rotate 2s ease-in-out infinite;
+        }
+        
+        /* Seasonal gradient backgrounds */
+        .spring-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+        
+        .summer-gradient {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        }
+        
+        .autumn-gradient {
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+        }
+        
+        .winter-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        
+        /* Custom drag and drop styling */
+        #dayDropZone {
+            min-height: 80px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #dayDropZone:hover {
+            background-color: #f0f9ff;
+        }
+        
+        /* Seasonal emoji animations */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .season-bounce:hover {
+            animation: bounce 1s ease-in-out infinite;
+        }
+        
+        /* Time of day effects */
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            }
+        }
+        
+        .time-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        /* Calendar builder styling */
+        .drag-over {
+            background-color: #dbeafe !important;
+            border-color: #3b82f6 !important;
+        }
+        
+        /* Custom scrollbar for better UX */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</body>
+</html>
